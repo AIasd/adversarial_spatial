@@ -19,7 +19,7 @@ import tensorflow.contrib.slim as slim
 from tqdm import trange
 
 import cifar10_input
-from eval import evaluate 
+from eval import evaluate
 import resnet
 from spatial_attack import SpatialAttack
 import utilities
@@ -169,7 +169,7 @@ def train(config):
                      os.path.join(model_dir, 'checkpoint'),
                      global_step=global_step)
 
-        if eval_during_training and ii % num_eval_steps == 0:  
+        if eval_during_training and ii % num_eval_steps == 0:
             evaluate(model, attack, sess, config, eval_summary_writer)
 
         # Actual training step
@@ -205,3 +205,6 @@ if __name__ == "__main__":
 
     config = utilities.config_to_namedtuple(config_dict)
     train(config)
+
+    os.mkdir(model_dir+'/spec')
+    shutil.copytree('.', model_dir+'/spec', ignore=utilities.include_patterns('*.py', '*.json'))
