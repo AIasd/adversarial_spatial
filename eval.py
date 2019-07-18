@@ -185,7 +185,7 @@ if __name__ == "__main__":
         if cur_checkpoint is None:
             print('No checkpoint found.')
         else:
-            with tf.Session() as sess:
+            with tf.Session(config=tf.ConfigProto(gpu_options=tf.GPUOptions(allow_growth=True))) as sess:
                 # Restore the checkpoint
                 print('Evaluating checkpoint {}'.format(cur_checkpoint))
                 saver.restore(sess, cur_checkpoint)
