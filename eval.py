@@ -133,7 +133,7 @@ def loop(model, attack, config, summary_writer=None):
         sys.stdout.flush()
         last_checkpoint_filename = cur_checkpoint
         already_seen_state = False
-        with tf.Session() as sess:
+        with tf.Session(config=tf.ConfigProto(gpu_options=tf.GPUOptions(allow_growth=True))) as sess:
             # Restore the checkpoint
             saver.restore(sess, cur_checkpoint)
             evaluate(model, attack, sess, config, summary_writer)
@@ -158,7 +158,7 @@ if __name__ == "__main__":
                         help='path to config file',
                         default="config.json", required=False)
     parser.add_argument('--loop', help='continuously monitor model_dir'
-                                       'evaluating new ckpt', 
+                                       'evaluating new ckpt',
                         action="store_true")
     args = parser.parse_args()
 
