@@ -114,6 +114,8 @@ def loop(model, attack, config, summary_writer=None):
     model_dir = config.model.output_dir
     saver = tf.train.Saver()
 
+    gpu_options = tf.GPUOptions(allow_growth=True)
+
     while True:
       cur_checkpoint = tf.train.latest_checkpoint(model_dir)
 
@@ -133,7 +135,7 @@ def loop(model, attack, config, summary_writer=None):
         sys.stdout.flush()
         last_checkpoint_filename = cur_checkpoint
         already_seen_state = False
-        with tf.Session(config=tf.ConfigProto(gpu_options=tf.GPUOptions(allow_growth=True))) as sess:
+        with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
             # Restore the checkpoint
             saver.restore(sess, cur_checkpoint)
             evaluate(model, attack, sess, config, summary_writer)
@@ -171,6 +173,8 @@ if __name__ == "__main__":
     global_step = tf.contrib.framework.get_or_create_global_step()
     attack = SpatialAttack(model, config.attack)
 
+    gpu_options = tf.GPUOptions(allow_growth=True)
+
     if args.loop:
         eval_dir = os.path.join(model_dir, 'eval')
         if not os.path.exists(eval_dir):
@@ -185,7 +189,7 @@ if __name__ == "__main__":
         if cur_checkpoint is None:
             print('No checkpoint found.')
         else:
-            with tf.Session(config=tf.ConfigProto(gpu_options=tf.GPUOptions(allow_growth=True))) as sess:
+            with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
                 # Restore the checkpoint
                 print('Evaluating checkpoint {}'.format(cur_checkpoint))
                 saver.restore(sess, cur_checkpoint)
