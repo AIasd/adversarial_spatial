@@ -102,7 +102,8 @@ def train(config):
     tf.summary.image('images_nat_train', model.x_image, collections=['nat'])
     tf.summary.scalar('learning_rate', learning_rate, collections=['nat'])
     nat_summaries = tf.summary.merge_all('nat')
-    gpu_options = tf.GPUOptions(allow_growth=True, visible_device_list='1')
+    os.environ["CUDA_VISIBLE_DEVICES"]="1"
+    gpu_options = tf.GPUOptions(allow_growth=True)
 
     with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
 
